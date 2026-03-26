@@ -1,8 +1,6 @@
 // frontend/src/pages/RegisterPage.js
 
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import API from '../api/axios';
+import { useState } from 'react';
 import Nav from '../components/Nav';
 import '../index.css';
 
