@@ -3,7 +3,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.X.X:5000/api', // Replace with your Termux device IP
+  
+  // Uses REACT_APP_API_URL from .env or .env.production
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
 });
 
 instance.interceptors.request.use((config) => {
@@ -11,5 +13,4 @@ instance.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
-
 export default instance;
