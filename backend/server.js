@@ -21,7 +21,7 @@ connectDB();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://thefolio.vercel.app', // ← your Vercel URL (update after deployment)
+    'https://thefolio-project-lyart.vercel.app', // ← your Vercel URL (update after deployment)
   ],
   credentials: true,
 }));
