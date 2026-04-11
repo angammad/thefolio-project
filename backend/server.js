@@ -25,9 +25,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* cors */
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
+  origin: [
+    'http://localhost:3000',
+    'https://thefolio-project-18vc.vercel.app',
+  ],
+credentials: true,
 }));
+
 
 /* test route */
 app.get('/', (req, res) => {
