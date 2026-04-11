@@ -1,5 +1,4 @@
 // frontend/src/pages/CreatePostPage.js
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -24,21 +23,54 @@ const CreatePostPage = () => {
   };
   
   return (
-    <div className='create-post-page'>
-      <h2>New Post</h2>
-      {error && <p className='error-msg'>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input value={title} onChange={e => setTitle(e.target.value)}
-        placeholder='Title' required />
-        <textarea value={body} onChange={e => setBody(e.target.value)}
-        placeholder='Write your post...' rows={10} required />
-        {user?.role === 'admin' && (
-          <><label>Cover Image (Admin only):</label>
-          <input type='file' accept='image/*' onChange={e =>
-          setImage(e.target.files[0])} /></>
-        )}
-        <button type='submit'>Publish</button>
-      </form>
+    <div className="create-post-wrapper">
+      <div className="create-post-card">
+        
+        <h2 className="create-title">Create New Post</h2>
+        <p className="create-subtitle">Share your thoughts, stories, or ideas</p>
+        
+        {error && <p className="error-msg">{error}</p>}
+        <form onSubmit={handleSubmit} className="create-form">
+          
+          {/* TITLE */}
+          <label>Post Title</label>
+          <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter a title..."
+          required
+          />
+          
+          {/* BODY */}
+          <label>Content</label>
+          <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          placeholder="Write your story here..."
+          rows={12}
+          required
+          />
+          
+          {/* IMAGE UPLOAD */}
+          {user?.role === 'admin' && (
+            <div className="upload-box">
+              <label>Cover Image (Admin only)</label>
+              <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              />
+            
+            </div>
+          )}
+          
+          {/* BUTTON */}
+          <button type="submit" className="publish-btn">
+            Publish Post
+          </button>
+        </form>
+      </div>
+      
     </div>
   );
 };

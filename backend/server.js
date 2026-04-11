@@ -6,7 +6,6 @@ const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
 
-// Routes
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const commentRoutes = require('./routes/comment.routes');
@@ -14,26 +13,35 @@ const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
-// Connect to database
+/* connect database */
 connectDB();
 
-// Middleware
+/* REQUIRED middleware */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/* static uploads */
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+/* cors */
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://thefolio-project-lyart.vercel.app', // ← your Vercel URL (update after deployment)
-  ],
-  credentials: true,
+  origin: 'http://localhost:3000',
+  credentials: true
 }));
 
-// API routes
+/* test route */
+app.get('/', (req, res) => {
+  res.send('Backend server is running');
+});
+
+/* routes */
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Start server
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -1,5 +1,4 @@
 // frontend/src/pages/ProfilePage.js
-
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import API from '../api/axios';
@@ -60,6 +59,11 @@ const ProfilePage = () => {
         onChange={e => setNewPw(e.target.value)} required />
         <button type='submit'>Change Password</button>
       </form>
+      
+      <footer className="footer">
+        Contact: angmmd@gmail.com | © 2026 Thea's Portfolio - All Rights Reserved.
+      </footer>
+      
     </div>
   );
 };

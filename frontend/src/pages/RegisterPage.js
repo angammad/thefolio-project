@@ -1,193 +1,188 @@
 // frontend/src/pages/RegisterPage.js
-
 import { useState } from 'react';
-import Nav from '../components/Nav';
-import '../index.css';
+import { useNavigate, Link } from 'react-router-dom';
+import API from '../api/axios';
 
 const RegisterPage = () => {
-
-  // Form state
-  const [formData, setFormData] = useState({
-    fullname: '',
+  const [form, setForm] = useState({
+    name: '',
     username: '',
     password: '',
     confirmPassword: '',
     dob: '',
     level: 'Beginner',
-    agree: false,
+    agree: false
   });
 
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Handle input change
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+
+    setForm({
+      ...form,
+      [name]: type === 'checkbox' ? checked : value
+    });
   };
 
-  // Handle radio buttons
-  const handleLevelChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      level: e.target.value,
-    }));
-  };
-
-  // Form validation
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let newErrors = {};
-    if (!formData.fullname.trim()) newErrors.fullname = 'Full name is required';
-    if (!formData.username.trim()) newErrors.username = 'Username is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm password';
-    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = 'Passwords do not match';
-    if (!formData.dob) newErrors.dob = 'Date of birth is required';
-    if (!formData.agree) newErrors.agree = 'You must agree before joining';
 
-    setErrors(newErrors);
+    setError('');
+    setSuccess('');
 
-    if (Object.keys(newErrors).length === 0) {
-      setSuccess('You are successfully registered! 🌅');
-      setTimeout(() => setSuccess(''), 3000);
-      setFormData({
-        fullname: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
-        dob: '',
-        level: 'Beginner',
-        agree: false,
+    if (!form.name || !form.username || !form.password || !form.confirmPassword || !form.dob) {
+      setError('Please fill all fields');
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (!form.agree) {
+      setError('You must agree before joining');
+      return;
+    }
+
+    try {
+      const { data } = await API.post('/auth/register', {
+        name: form.name,
+        email: form.username,
+        password: form.password
       });
+
+      localStorage.setItem('token', data.token);
+
+      setSuccess('You are successfully registered! 🌅');
+
+      setTimeout(() => navigate('/home'), 1500);
+
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed.');
     }
   };
 
   return (
-    <>
-      <Nav />
+    <div className="register-page">
 
-      <main>
-        <section className="containers" style={{ textAlign: 'center' }}>
-          <h2>Join the Community</h2>
-          <p>
-            By signing up, you’ll receive calming sunset photos and gentle reminders to pause, breathe, and enjoy
-            the moment.
-          </p>
-        </section>
+      <div className="register-card">
 
-        <section className="containers">
-          <form onSubmit={handleSubmit}>
-            <label>Full Name:</label>
-            <input
-              type="text"
-              name="fullname"
-              value={formData.fullname}
-              onChange={handleChange}
-            />
-            {errors.fullname && <p className="error">{errors.fullname}</p>}
+        <div className="register-header">
+          <h2>Create Account 🌅</h2>
+          <p>Join the Serenity community and enjoy peaceful moments.</p>
+        </div>
 
-            <label>Username:</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-            />
-            {errors.username && <p className="error">{errors.username}</p>}
+        {error && <p className="error-msg">{error}</p>}
+        {success && <p className="success-msg">{success}</p>}
 
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {errors.password && <p className="error">{errors.password}</p>}
+        <form onSubmit={handleSubmit} className="register-form">
 
-            <label>Confirm Password:</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+          <input
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+          />
 
-            <p id="info" className={success ? 'show' : ''}>
-              <span className="checkmark">✔</span>
-              <span className="success-text">{success}</span>
-            </p>
+          <input
+            name="username"
+            placeholder="Email Address"
+            value={form.username}
+            onChange={handleChange}
+          />
 
-            <label>Date of Birth:</label>
-            <input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-            />
-            {errors.dob && <p className="error">{errors.dob}</p>}
-            
-            <p><strong>Your Goal:</strong></p>
-            <div style={{ margin: '10px 0' }}>
-              <input
-              type="radio"
-              name="level"
-              value="Beginner"
-              checked={formData.level === 'Beginner'}
-              onChange={handleLevelChange}
-              style={{ width: 'auto' }}
-              />{' '}
-              Beginner
-              
-              <input
-              type="radio"
-              name="level"
-              value="Intermediate"
-              checked={formData.level === 'Intermediate'}
-              onChange={handleLevelChange}
-              style={{ width: 'auto', marginLeft: '10px' }}
-              />{' '}
-              Intermediate
-              
-              <input
-              type="radio"
-              name="level"
-              value="Expert"
-              checked={formData.level === 'Expert'}
-              onChange={handleLevelChange}
-              style={{ width: 'auto', marginLeft: '10px' }}
-              />{' '}
-              Expert
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+          />
+
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={form.confirmPassword}
+            onChange={handleChange}
+          />
+
+          <input
+            type="date"
+            name="dob"
+            value={form.dob}
+            onChange={handleChange}
+          />
+
+          <div className="goal-section">
+            <p>Your Goal:</p>
+
+            <div className="radio-group">
+
+              <label>
+                <input
+                  type="radio"
+                  name="level"
+                  value="Beginner"
+                  checked={form.level === 'Beginner'}
+                  onChange={handleChange}
+                />
+                Beginner
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="level"
+                  value="Intermediate"
+                  checked={form.level === 'Intermediate'}
+                  onChange={handleChange}
+                />
+                Intermediate
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="level"
+                  value="Expert"
+                  checked={form.level === 'Expert'}
+                  onChange={handleChange}
+                />
+                Expert
+              </label>
+
             </div>
+          </div>
 
-            <label>
-              <input
-                type="checkbox"
-                name="agree"
-                checked={formData.agree}
-                onChange={handleChange}
-                style={{ width: 'auto' }}
-              />{' '}
-              I agree to receive reminders.
-            </label>
-            {errors.agree && <p className="error">{errors.agree}</p>}
-            
-            <button type="submit" style={{ width: '100%', marginTop: '20px' }}>
-              Join Now
-            </button>
-          </form>
-        </section>
-      </main>
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              name="agree"
+              checked={form.agree}
+              onChange={handleChange}
+            />
+            I agree to receive reminders.
+          </label>
 
-      <footer>
-        <p>Contact: angmmd@gmail.com | &copy; 2026 Thea's Portfolio – All Rights Reserved.</p>
-      </footer>
-    </>
+          <button type="submit">
+            Join Now
+          </button>
+
+        </form>
+
+        <p className="register-footer">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+
+      </div>
+
+    </div>
   );
 };
 

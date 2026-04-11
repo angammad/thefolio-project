@@ -1,8 +1,5 @@
 // frontend/src/App.js
-
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Nav';
-import ProtectedRoute from './components/ProtectedRoute';
 
 import SplashPage from './pages/SplashPage';
 import HomePage from './pages/HomePage';
@@ -13,21 +10,47 @@ import ProfilePage from './pages/ProfilePage';
 import CreatePostPage from './pages/CreatePostPage';
 import EditPostPage from './pages/EditPostPage';
 import AdminPage from './pages/AdminPage';
+import GamePage from './pages/GamePage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
-  <>
-    <Navbar />
-    <Routes>
-      <Route path='/' element={<SplashPage />} />
-      <Route path='/home' element={<HomePage />} />
-      <Route path='/posts/:id' element={<PostPage />} />
-      <Route path='/login' element={<LoginPage />} />
-      <Route path='/register' element={<RegisterPage />} />
-      <Route path='/profile' element={<ProtectedRoute><ProfilePage/></ProtectedRoute>} />
-      <Route path='/create-post' element={<ProtectedRoute><CreatePostPage/></ProtectedRoute>} />
-      <Route path='/edit-post/:id' element={<ProtectedRoute><EditPostPage/></ProtectedRoute>} />
-      <Route path='/admin' element={<ProtectedRoute role='admin'><AdminPage/></ProtectedRoute>} />
+    <>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<SplashPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/posts/:id" element={<PostPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/game" element={<GamePage />} />
+
+        <Route
+          path="/profile"
+          element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}
+        />
+
+        <Route
+          path="/create-post"
+          element={<ProtectedRoute><CreatePostPage /></ProtectedRoute>}
+        />
+
+        <Route
+          path="/edit-post/:id"
+          element={<ProtectedRoute><EditPostPage /></ProtectedRoute>}
+        />
+
+        <Route
+          path="/admin"
+          element={<ProtectedRoute role="admin"><AdminPage /></ProtectedRoute>}
+        />
       </Routes>
     </>
   );
