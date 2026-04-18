@@ -28,9 +28,11 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://thefolio-project-18vc.vercel.app',
+    'https://thefolio-project-git-main-an-gmmd.vercel.app',
   ],
-credentials: true,
+  credentials: true,
 }));
+
 
 
 /* test route */
