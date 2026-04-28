@@ -27,9 +27,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://thefolio-project-18vc.vercel.app',
     'https://thefolio-project-git-main-an-gmmd.vercel.app',
-  ],
+],
+  
   credentials: true,
 }));
 
